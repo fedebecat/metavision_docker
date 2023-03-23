@@ -1,0 +1,19 @@
+version: '3'
+services:
+  metavision_sdk:
+    build: ./metavision_sdk
+    ports:
+      - 5920:5920
+    volumes:
+      - ./metavision_sdk/data:/data
+    stdin_open: true
+    tty: true
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+  #esim:
+    #build: ./esim

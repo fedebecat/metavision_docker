@@ -19,3 +19,8 @@ RUN apt -y install metavision-sdk-python3.7
 
 RUN python3 -m pip install numba profilehooks "pytorch_lightning==1.5.10" "tqdm==4.63.0" "kornia==0.6.1"
 RUN python3 -m pip install llvmlite "pycocotools==2.0.4" "seaborn==0.11.2" "torchmetrics==0.7.2"
+
+# Display stuff
+ENV DISPLAY :20
+RUN apt-get install -y git x11vnc xauth net-tools xvfb
+EXPOSE 5920

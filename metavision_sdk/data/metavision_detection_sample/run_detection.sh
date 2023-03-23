@@ -1,0 +1,1 @@
+python3 /usr/share/metavision/sdk/ml/python_samples/detection_and_tracking_pipeline/detection_and_tracking_pipeline.py --object_detector_dir red_histogram_05_2020/ --record_file driving_sample.raw --display
