@@ -21,7 +21,7 @@ def init_event_producer(DELTA_T):
 
 DATA_PATH = '/data/metavision_detection_sample/'
 
-SEQUENCE_FILENAME_RAW = DATA_PATH + '/driving_sample.raw'
+SEQUENCE_FILENAME_RAW = ""#DATA_PATH + '/driving_sample.raw'
 # SEQUENCE_FILENAME_RAW = DATA_PATH + '/user01_2022-06-08_12-20-03.raw'
 
 DELTA_T = 10000  # 10 ms
@@ -36,12 +36,16 @@ frame = np.zeros((ev_height, ev_width, 3), dtype=np.uint8)
 
 cv2.namedWindow("Frame", cv2.WINDOW_NORMAL)
 
-tbr_encoder = TBR(N=8, width=ev_width, height=ev_height, incremental=True, cuda=True)
+tbr_encoder = TBR(N=4, width=ev_width, height=ev_height, incremental=True, cuda=True)
 
 counter = 0
 event_rates = []
 all_fps = []
+draw_fps = 30
+last_draw_time = 0 #time()
+
 for ev in mv_it:
+    start_time = time()
     print(f'----- Frame {counter} -----')
     ts = mv_it.get_current_time()
     if END_TS and ts > END_TS:
@@ -62,10 +66,14 @@ for ev in mv_it:
     all_fps.append(cur_fps)
     print(f'FPS: {cur_fps}')
     # cv2.imwrite(f'frame_{counter}__.png', tbr_frame*255)
-    cv2.imshow('Frame', tbr_frame)
+    if (ts - last_draw_time) >= 1/draw_fps:
+        cv2.imshow('Frame', tbr_frame)
+        last_draw_time = ts
+        print(f'--------{(ts - last_draw_time)}')
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
     counter += 1
+    print(1/(time() - start_time))
 
 plt.plot(event_rates, all_fps ,'.')
 plt.xlabel('Num. events')

@@ -6,6 +6,9 @@ services:
       - 5920:5920
     volumes:
       - ./metavision_sdk/data:/data
+      - /dev/serial/by-id/:/dev/serial/by-id # needed for using the usb event camera
+    devices:
+      - /dev/bus/usb/004/005:/dev/bus/usb/004/005 # change this according to the output of "lsusb | grep -i cypress"
     stdin_open: true
     tty: true
     deploy:
