@@ -1,0 +1,28 @@
+FROM nvidia/cuda:11.7.1-cudnn8-devel-ubuntu22.04
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt update
+RUN apt -y install python3-pip
+RUN apt -y install libcanberra-gtk-module mesa-utils ffmpeg
+#RUN apt install software-properties-common
+#RUN add-apt-repository ppa:deadsnakes/ppa
+RUN apt -y install python3.10
+RUN python3 -m pip install torch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1
+RUN python3 -m pip install pip --upgrade
+RUN python3 -m pip install "opencv-python==4.5.5.64" "sk-video==1.1.10" "fire==0.4.0" "numpy==1.23.4" pandas scipy h5py
+RUN python3 -m pip install jupyter jupyterlab matplotlib "ipywidgets==7.6.5"
+RUN apt -y install cmake libboost-program-options-dev libeigen3-dev
+
+RUN echo "deb [arch=amd64 trusted=yes] https://apt.prophesee.ai/dists/public/baiTh5si/ubuntu jammy sdk" > metavision.list
+RUN cp metavision.list /etc/apt/sources.list.d
+RUN apt update
+RUN apt -y install metavision-sdk
+RUN apt -y install metavision-sdk-python3.10
+
+RUN python3 -m pip install numba profilehooks "pytorch_lightning==1.5.10" "tqdm==4.63.0" "kornia==0.6.1"
+RUN python3 -m pip install llvmlite "pycocotools==2.0.4" "seaborn==0.11.2" "torchmetrics==0.7.2"
+
+# Display stuff
+ENV DISPLAY :20
+RUN apt-get install -y git x11vnc xauth net-tools xvfb
+EXPOSE 5920
